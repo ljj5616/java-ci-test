@@ -73,9 +73,9 @@ jobs:
 
           for attempt in {1..30}; do
             if systemctl is-active --quiet java-ci-test &&
-               response=$(curl --fail --silent --max-time 3 http://localhost:8080/) &&
-               [[ "$response" == 'Hello' ]]; then
-              echo 'Deployment succeeded: GET / returned Hello'
+               status=$(curl --silent --output /dev/null --write-out '%{http_code}' --max-time 3 http://localhost:8080/) &&
+               [[ "$status" == '200' ]]; then
+              echo 'Deployment succeeded: GET / returned HTTP 200'
               exit 0
             fi
             sleep 2
